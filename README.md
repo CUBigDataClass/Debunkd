@@ -1,6 +1,7 @@
 # Tackling Misinformation with Big Data
-## A project by Team Swashbucklers for ATLS 5214
-### University of Colorado Boulder
+## A project by Team Swashbucklers for ATLS 5214 @ CU Boulder
+
+#### Introduction
 
 This project aims to highlight the spread of misinformation through social media by using Map and graph-based visualizations 
 to gain insight into how misinformation spreads across the internet. We shall be using Twitter to conduct our experiments.
