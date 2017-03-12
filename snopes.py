@@ -1,6 +1,8 @@
 from bs4 import BeautifulSoup
 import requests
 import string
+
+
 def snopes_scrape(search_term, num= 5):
 
     """
@@ -22,9 +24,11 @@ def snopes_scrape(search_term, num= 5):
                 {"class":'article-link-title'})[:num]]
     punctmap = str.maketrans('', '', string.punctuation+'‘’')
     matches = [s.translate(punctmap) for s in matches]
-    return matches
+    data = soup.findAll('div',attrs={'class':'article-links-wrapper list-view'})[0]
+    links = [i.get("href") for i in data.findAll('a')][:num]
+    return zip(matches, links)
 
 if __name__== "__main__":
     s = input("Enter search term: ")
     res = snopes_scrape(s)
-    print (res)
+    print (list(res))
