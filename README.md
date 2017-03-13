@@ -12,7 +12,7 @@ Our aim is to track the spread of false news and hoaxes by using fact-checking w
 FactCheck.
 
 #### RoadMap
-- [ ] Get Factchecking Links from Websites(Snopes for now)
+- [x] Get Factchecking Links from Websites(Snopes for now)
 - [ ] Get list of corresponding tweets from Twitter.
 - [ ] Map visualization to show the distributions of the hoax
 - [ ] Map visualization to show timeline of the spread of the hoax
