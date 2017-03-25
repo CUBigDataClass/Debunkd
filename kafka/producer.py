@@ -4,8 +4,7 @@ import configparser
 from pykafka import KafkaClient
 
 ##parameters for the search
-url =
-"https://gnip-api.twitter.com/search/fullarchive/accounts/greg-students/prod.json"
+url ="https://gnip-api.twitter.com/search/fullarchive/accounts/greg-students/prod.json"
 parameters = { 'query':'gnip has:profile_geo', 'maxResults':'10',
 'fromDate':'201701010000', 'toDate':'201701050000'}
 
