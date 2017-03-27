@@ -1,2 +1,2 @@
-credentials.ini
+*.ini
 .ipynb_checkpoints/
