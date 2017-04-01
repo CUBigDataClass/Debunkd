@@ -1,0 +1,15 @@
+version: '2'
+services:
+  frontend:
+    image: sb-web
+    ports:
+    - "0.0.0.0:80:80"
+    - "0.0.0.0:443:443"
+  cassandra:
+    image: cassandra
+    ports:
+    - "9042:9042"
+    volumes:
+    - volume01:/var/lib/cassandra
+volumes:
+  volume01: {}
