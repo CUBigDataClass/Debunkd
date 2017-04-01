@@ -1,0 +1,3 @@
+[submodule "sb-web"]
+	path = sb-web
+	url = git@github.com:CUBigDataClass/sb-web.git
