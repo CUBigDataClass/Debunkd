@@ -1,0 +1,10 @@
+version: "3"
+services:
+  master:
+    image: gettyimages/spark:2.1.0-hadoop-2.7
+    command: bin/spark-class org.apache.spark.deploy.master.Master -h master
+    ports:
+      - "8080:8080"
+  worker:
+    image: gettyimages/spark:2.1.0-hadoop-2.7
+    command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://master:7077
