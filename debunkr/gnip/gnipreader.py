@@ -23,18 +23,27 @@ class GnipData():
     - fromDate (string- yyyymmddhhmmss) : Starting Date of all the tweets returned
     - toDate (string -yyyymmddhhmmss): Ending Date of all the tweets returned
     """
+    def set_up(self):
+        self.url = "https://gnip-api.twitter.com/search/" \
+            "fullarchive/accounts/greg-students/prod.json"
+        self.kafka_server = KAFKA_ADDRESS
+        self.kafka_producer = KafkaProducer(bootstrap_servers = [self.kafka_server])
+        #this works in jupyter but not in terminal... working around
+        # self.kafka_producer = KafkaProducer(value_serializer=lambda m: json.dumps(m).encode('unicode'),
+        #                                    bootstrap_servers=[self.kafka_server])
+
+    def __init__(self, maxResults, maxResultsPerPage):
+        self.maxResults = maxResults
+        self.maxResultsPerPage = maxResultsPerPage
+        self.set_up()
+
+
     def __init__(self, maxResults, maxResultsPerPage, fromDate, toDate):
         self.maxResults = maxResults
         self.fromDate = fromDate
         self.toDate = toDate
-        self.url = "https://gnip-api.twitter.com/search/" \
-            "fullarchive/accounts/greg-students/prod.json"
         self.maxResultsPerPage = maxResultsPerPage
-        self.kafka_server = KAFKA_ADDRESS
-        #this works in jupyter but not in terminal... working around
-        # self.kafka_producer = KafkaProducer(value_serializer=lambda m: json.dumps(m).encode('unicode'),
-        #                                    bootstrap_servers=[self.kafka_server])
-        self.kafka_producer = KafkaProducer(bootstrap_servers = [self.kafka_server])
+        self.set_up()
         
     def fetchTweets(self, query):
         """
