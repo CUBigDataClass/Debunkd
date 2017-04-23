@@ -37,17 +37,10 @@ class GnipData():
         # self.kafka_producer = KafkaProducer(value_serializer=lambda m: json.dumps(m).encode('unicode'),
         #                                    bootstrap_servers=[self.kafka_server])
 
-    def __init__(self, maxResults, maxResultsPerPage):
-        self.maxResults = maxResults
-        self.maxResultsPerPage = maxResultsPerPage
-        self.set_up()
 
-
-    def __init__(self, maxResults, maxResultsPerPage, fromDate, toDate):
-        self.maxResults = maxResults
+    def __init__(self, fromDate, toDate):
         self.fromDate = fromDate
-        self.toDate = toDate
-        self.maxResultsPerPage = maxResultsPerPage
+        self.toDate = toDate        
         self.set_up()
 
     def fetchTweets(self, query):
@@ -60,7 +53,7 @@ class GnipData():
         """
         extended_query = query+" has:geo place_country:us"
         params = {'query':extended_query,
-                  'maxResults':self.maxResultsPerPage,
+                  'maxResults': 500,
                   'fromDate' : self.fromDate,
                   'toDate' : self.toDate
                  }
@@ -71,17 +64,15 @@ class GnipData():
                 self.queueKafka( json.dumps(r).encode('utf-8'))
 
         #Scrolling through until next runs out or maxResults is exceeded
-        for i in range(int(self.maxResults/self.maxResultsPerPage)):
-            if 'next' in response.json().keys():
-                params= {'query':extended_query, "next": response.json()['next']}
-                response = requests.get(self.url, params=params, \
-                             auth=(api_user, api_passwd))
+        while 'next' in response.json().keys():
+            params= {'query':extended_query, "next": response.json()['next']}
+            response = requests.get(self.url, params=params, \
+                         auth=(api_user, api_passwd))
 
-                for r in response.json()['results']:
-                        self.queueKafka( json.dumps(r).encode('utf-8'))
-                #self.queueKafka(json.dumps(response.json()['results']).encode('utf-8'))
-            else:
-                break
+            for r in response.json()['results']:
+                    self.queueKafka( json.dumps(r).encode('utf-8'))
+            #self.queueKafka(json.dumps(response.json()['results']).encode('utf-8'))
+        
 
 
     def queueKafka(self, json_data ):
@@ -96,5 +87,5 @@ class GnipData():
 
 
 if __name__ == "__main__":
-    a = GnipData(11, 10 , "201612300000", "201612310000")
+    a = GnipData( "201612300000", "201612310000")
     a.fetchTweets("hillary")
