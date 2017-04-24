@@ -61,6 +61,7 @@ class GnipData():
                          auth=(api_user, api_passwd))
 
         for r in response.json()['results']:
+        	    r['topic']= Query
                 self.queueKafka( json.dumps(r).encode('utf-8'))
 
         #Scrolling through until next runs out or maxResults is exceeded
@@ -70,6 +71,7 @@ class GnipData():
                          auth=(api_user, api_passwd))
 
             for r in response.json()['results']:
+            		r['topic']= query
                     self.queueKafka( json.dumps(r).encode('utf-8'))
             #self.queueKafka(json.dumps(response.json()['results']).encode('utf-8'))
         
