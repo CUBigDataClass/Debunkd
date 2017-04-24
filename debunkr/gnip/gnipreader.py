@@ -10,7 +10,7 @@ config.read('credentials.ini')
 api_user = config['GNIP_API']['username']
 api_passwd = config['GNIP_API']['password']
 TOPIC_NAME= "gnipstream"
-KAFKA_ADDRESS = "172.32.13.183:32777"
+KAFKA_ADDRESS = "172.32.13.183:32769"
 #----------------------------------------
 
 
