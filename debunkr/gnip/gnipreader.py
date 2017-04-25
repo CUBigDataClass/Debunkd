@@ -58,7 +58,7 @@ class GnipData():
 
         Returns : Nothing
         """
-        extended_query = query+" has:geo place_country:us"
+        extended_query = query+" place_country:us"
         params = {'query':extended_query,
                   'maxResults':self.maxResultsPerPage,
                   'fromDate' : self.fromDate,
