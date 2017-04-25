@@ -45,7 +45,7 @@ class GnipData():
         self.toDate = toDate
         self.set_up()
 
-    def fetchTweets(self, query):
+    def fetchTweets(self, query, topic):
         """
         Takes a query and pushes the relevant tweets to Kafka
         Params
@@ -63,7 +63,7 @@ class GnipData():
                          auth=(api_user, api_passwd))
         try:
             for r in response.json()['results']:
-                    r['topic']= 1 
+                    r['topic']= topic
                     self.queueKafka( json.dumps(r).encode('utf-8'))
         except:
             print (response.json()['error'])
@@ -75,10 +75,10 @@ class GnipData():
                          auth=(api_user, api_passwd))
             try:
                 for r in response.json()['results']:
-                        r['topic']= 1 
+                        r['topic']= topic
                         self.queueKafka( json.dumps(r).encode('utf-8'))
             except:
-                print (response.json()['error'])
+                    print (response.json()['error'])
             #self.queueKafka(json.dumps(response.json()['results']).encode('utf-8'))
 
 
@@ -96,5 +96,5 @@ class GnipData():
 
 if __name__ == "__main__":
     a = GnipData( "201401010000", "201704200000")
-    a.fetchTweets("being single disability")
+    a.fetchTweets("hillary weapons isis", 2)
     #call("docker exec -it spark_master_1 bin/spark-submit --packages org.apache.spark:spark-streaming-kafka-0-8_2.11:2.1.0,datastax:spark-cassandra-connector:2.0.1-s_2.11 sparkjob.py 172.32.13.183:2181 gnipLatestStream")
