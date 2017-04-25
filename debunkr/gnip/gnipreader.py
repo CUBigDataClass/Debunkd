@@ -66,7 +66,7 @@ class GnipData():
                     r['topic']= 1 
                     self.queueKafka( json.dumps(r).encode('utf-8'))
         except:
-            print response.json()['error']
+            print (response.json()['error'])
 
         #Scrolling through until next runs out or maxResults is exceeded
         while 'next' in response.json().keys():
