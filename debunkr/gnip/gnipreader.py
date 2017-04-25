@@ -53,7 +53,7 @@ class GnipData():
 
         Returns : Nothing
         """
-        extended_query = query
+        extended_query = query+ " country_code:us"
         params = {'query':extended_query,
                   'maxResults': 500,
                   'fromDate' : self.fromDate,
@@ -61,9 +61,12 @@ class GnipData():
                  }
         response = requests.get(self.url, params=params, \
                          auth=(api_user, api_passwd))
-        for r in response.json()['results']:
-                r['topic']= 1 
-                self.queueKafka( json.dumps(r).encode('utf-8'))
+	    try:
+	        for r in response.json()['results']:
+	                r['topic']= 1 
+	                self.queueKafka( json.dumps(r).encode('utf-8'))
+	    except:
+	    	print response.json()['error']
 
         #Scrolling through until next runs out or maxResults is exceeded
         while 'next' in response.json().keys():
