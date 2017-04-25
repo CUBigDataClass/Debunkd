@@ -73,10 +73,12 @@ class GnipData():
             params= {'query':extended_query, "next": response.json()['next']}
             response = requests.get(self.url, params=params, \
                          auth=(api_user, api_passwd))
-
-            for r in response.json()['results']:
-                    r['topic']= 1 
-                    self.queueKafka( json.dumps(r).encode('utf-8'))
+            try:
+                for r in response.json()['results']:
+                        r['topic']= 1 
+                        self.queueKafka( json.dumps(r).encode('utf-8'))
+            except:
+                print (response.json()['error'])
             #self.queueKafka(json.dumps(response.json()['results']).encode('utf-8'))
 
 
