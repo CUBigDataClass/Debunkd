@@ -98,5 +98,5 @@ if __name__ == "__main__":
     a = GnipData( "201401010000", "201704200000")
     q = "hillary sold weapons to isis"
     q = q.strip().replace(" ", " OR ")
-    a.fetchTweets(q)
+    a.fetchTweets("hillary OR sold OR weapons OR to OR isis")
     #call("docker exec -it spark_master_1 bin/spark-submit --packages org.apache.spark:spark-streaming-kafka-0-8_2.11:2.1.0,datastax:spark-cassandra-connector:2.0.1-s_2.11 sparkjob.py 172.32.13.183:2181 gnipLatestStream")
