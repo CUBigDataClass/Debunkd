@@ -61,12 +61,12 @@ class GnipData():
                  }
         response = requests.get(self.url, params=params, \
                          auth=(api_user, api_passwd))
-	    try:
-	        for r in response.json()['results']:
-	                r['topic']= 1 
-	                self.queueKafka( json.dumps(r).encode('utf-8'))
-	    except:
-	    	print response.json()['error']
+        try:
+            for r in response.json()['results']:
+                    r['topic']= 1 
+                    self.queueKafka( json.dumps(r).encode('utf-8'))
+        except:
+            print response.json()['error']
 
         #Scrolling through until next runs out or maxResults is exceeded
         while 'next' in response.json().keys():
