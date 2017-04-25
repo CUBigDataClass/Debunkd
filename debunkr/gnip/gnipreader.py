@@ -11,7 +11,7 @@ config = configparser.ConfigParser()
 config.read('credentials.ini')
 api_user = config['GNIP_API']['username']
 api_passwd = config['GNIP_API']['password']
-TOPIC_NAME= "gnipstream"
+TOPIC_NAME= "gnipLatestStream"
 KAFKA_ADDRESS = "172.32.13.183:32768"
 #----------------------------------------
 
@@ -63,7 +63,7 @@ class GnipData():
                          auth=(api_user, api_passwd))
         try:
             for r in response.json()['results']:
-                    r['topic']= 1 
+                    r['topic']= 1
                     self.queueKafka( json.dumps(r).encode('utf-8'))
         except:
             print (response.json()['error'])
@@ -75,7 +75,7 @@ class GnipData():
                          auth=(api_user, api_passwd))
             try:
                 for r in response.json()['results']:
-                        r['topic']= 1 
+                        r['topic']= 1
                         self.queueKafka( json.dumps(r).encode('utf-8'))
             except:
                 print (response.json()['error'])
@@ -96,5 +96,7 @@ class GnipData():
 
 if __name__ == "__main__":
     a = GnipData( "201401010000", "201704200000")
-    a.fetchTweets("being single disability")
+    q = "hillary sold weapons to isis"
+    q = q.strip().replace(" ", " OR ")
+    a.fetchTweets(q)
     #call("docker exec -it spark_master_1 bin/spark-submit --packages org.apache.spark:spark-streaming-kafka-0-8_2.11:2.1.0,datastax:spark-cassandra-connector:2.0.1-s_2.11 sparkjob.py 172.32.13.183:2181 gnipLatestStream")
