@@ -1,7 +1,9 @@
+import os
 import requests
 import configparser
 import json
 from kafka import KafkaProducer
+from subprocess import call
 
 #We need better storage for all of these
 #----------------------------------------
@@ -10,7 +12,7 @@ config.read('credentials.ini')
 api_user = config['GNIP_API']['username']
 api_passwd = config['GNIP_API']['password']
 TOPIC_NAME= "gnipstream"
-KAFKA_ADDRESS = "172.32.13.183:32769"
+KAFKA_ADDRESS = "172.32.13.183:32768"
 #----------------------------------------
 
 
@@ -51,7 +53,7 @@ class GnipData():
 
         Returns : Nothing
         """
-        extended_query = query+" place_country:us"
+        extended_query = query
         params = {'query':extended_query,
                   'maxResults': 500,
                   'fromDate' : self.fromDate,
@@ -59,9 +61,8 @@ class GnipData():
                  }
         response = requests.get(self.url, params=params, \
                          auth=(api_user, api_passwd))
-
         for r in response.json()['results']:
-                r['topic']= query
+                r['topic']= 1 
                 self.queueKafka( json.dumps(r).encode('utf-8'))
 
         #Scrolling through until next runs out or maxResults is exceeded
@@ -71,7 +72,7 @@ class GnipData():
                          auth=(api_user, api_passwd))
 
             for r in response.json()['results']:
-                    r['topic']= query
+                    r['topic']= 1 
                     self.queueKafka( json.dumps(r).encode('utf-8'))
             #self.queueKafka(json.dumps(response.json()['results']).encode('utf-8'))
 
@@ -89,5 +90,6 @@ class GnipData():
 
 
 if __name__ == "__main__":
-    a = GnipData( "201612300000", "201612310000")
-    a.fetchTweets("hillary")
+    a = GnipData( "201401010000", "201704200000")
+    a.fetchTweets("being single disability")
+    #call("docker exec -it spark_master_1 bin/spark-submit --packages org.apache.spark:spark-streaming-kafka-0-8_2.11:2.1.0,datastax:spark-cassandra-connector:2.0.1-s_2.11 sparkjob.py 172.32.13.183:2181 gnipLatestStream")
