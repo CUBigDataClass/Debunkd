@@ -53,7 +53,7 @@ class GnipData():
 
         Returns : Nothing
         """
-        extended_query = query+ " country_code:us"
+        extended_query = query
         params = {'query':extended_query,
                   'maxResults': 500,
                   'fromDate' : self.fromDate,
