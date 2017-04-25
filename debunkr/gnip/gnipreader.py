@@ -40,7 +40,7 @@ class GnipData():
 
     def __init__(self, fromDate, toDate):
         self.fromDate = fromDate
-        self.toDate = toDate        
+        self.toDate = toDate
         self.set_up()
 
     def fetchTweets(self, query):
@@ -51,7 +51,7 @@ class GnipData():
 
         Returns : Nothing
         """
-        extended_query = query+" has:geo place_country:us"
+        extended_query = query+" place_country:us"
         params = {'query':extended_query,
                   'maxResults': 500,
                   'fromDate' : self.fromDate,
@@ -74,7 +74,7 @@ class GnipData():
                     r['topic']= query
                     self.queueKafka( json.dumps(r).encode('utf-8'))
             #self.queueKafka(json.dumps(response.json()['results']).encode('utf-8'))
-        
+
 
 
     def queueKafka(self, json_data ):
