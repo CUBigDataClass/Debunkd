@@ -10,8 +10,11 @@ from pyspark.sql.functions import count
 
 
 if __name__ == "__main__":
-  ##update the cassandra table with the new counts
-  topics_count.write.format("org.apache.spark.sql.cassandra").options(table="topic_state_aggregates", keyspace="swashbucklers").save(mode="append")
+  ##get the spark session
+  spark = SparkSession.builder.appName("SparkCassandraApp").config("spark.cassandra.connection.host", "172.32.13.183").config("spark.cassandra.connection.port", "9042").master("local[2]").getOrCreate();
+
+  ##read table as a dataframe
+  df = spark.read.format("org.apache.spark.sql.cassandra").options(table="tweets_master", keyspace="swashbucklers").load();
 
   ##aggregate over dates for a given topic
   topics_date_count = df.select("topic","posted_time").groupBy("topic", "posted_time").agg(count("posted_time").alias("count"))
@@ -20,7 +23,7 @@ if __name__ == "__main__":
   topics_date_count.write.format("org.apache.spark.sql.cassandra").options(table="topic_date_aggregates", keyspace="swashbucklers").save(mode="overwrite")
 
   ##write the dataframe as a json file
-  
+
 
 
   topics_date_count.unpersist()
