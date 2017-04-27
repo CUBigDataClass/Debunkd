@@ -1,3 +1,6 @@
 [submodule "sb-web"]
 	path = sb-web
 	url = git@github.com:CUBigDataClass/sb-web.git
+[submodule "sb-kubernetes"]
+	path = sb-kubernetes
+	url = git@github.com:CUBigDataClass/sb-kubernetes.git
