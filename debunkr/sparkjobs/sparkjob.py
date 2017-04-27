@@ -18,7 +18,7 @@ def getSparkSessionInstance(sparkConf):
               .appName("SparkCassandraApp")\
               .config("spark.cassandra.connection.host", "172.32.13.183")\
               .config("spark.cassandra.connection.port", "9042")\
-              .master("local[2]")\
+              .master("spark://masterec2-35-163-127-184.us-west-2.compute.amazonaws.com:6066")\
               .getOrCreate();
     return globals()['sparkSessionSingletonInstance']
 
@@ -70,7 +70,7 @@ if __name__ == "__main__":
             return ""
     
     def getLocation(data):
-        states = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL", "GA", 
+        states = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", 
           "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", 
           "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", 
           "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", 
