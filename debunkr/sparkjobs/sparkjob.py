@@ -16,9 +16,9 @@ def getSparkSessionInstance(sparkConf):
     if ('sparkSessionSingletonInstance' not in globals()):
         globals()['sparkSessionSingletonInstance'] = SparkSession.builder\
               .appName("SparkCassandraApp")\
-              .config("spark.cassandra.connection.host", "173.32.13.183")\
+              .config("spark.cassandra.connection.host", "ec2-35-163-127-184.us-west-2.compute.amazonaws.com")\
               .config("spark.cassandra.connection.port", "9042")\
-              .master("spark://ec2-35-167-172-19.us-west-2.compute.amazonaws.com:32219")\
+              .master("local[2]")\
               .getOrCreate();
     return globals()['sparkSessionSingletonInstance']
 
@@ -35,7 +35,7 @@ if __name__ == "__main__":
     kvs = KafkaUtils.createStream(ssc, brokers, "spark-streaming-consumer", {topic: 2})
     parsed = kvs.map(lambda x: json.loads(x[1]))
     #parsed.foreachRDD(println)
-    parsed.pprint()
+    #parsed.pprint()
     #parsed.foreach(println)
 
     #Month = Enum('Month', 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec')
@@ -122,14 +122,14 @@ if __name__ == "__main__":
                                            geo_coordinates=getGeoCoordinates(tweet),\
                                            hashtags=getHashTags(tweet),\
                                            location=getLocation(tweet),\
-                                           original_status_url= getOriginalStatus(tweet), \
+                                           original_status_url= getOriginalid(tweet), \
                                            posted_time=getTweetDate(tweet), \
                                            retweet_count=getRetweetCount(tweet),\
-                                           #status_url=getStatusURL(tweet),\
+                                           status_url=None,\
                                            topic=tweet['topic'],\
                                            type= getTweetType(tweet), \
                                            url_list=getURLlist(tweet),\
-                                           user_id=tweet['tweet']['user']['id_str']
+                                           user_id=tweet['user']['id_str']
                                            ))
 
         schemaPeople = spark.createDataFrame(rowRdd, schema)
