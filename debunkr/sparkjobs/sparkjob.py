@@ -6,6 +6,7 @@ from pyspark import SparkContext
 from pyspark.streaming import StreamingContext
 from pyspark.streaming.kafka import KafkaUtils
 from pyspark.sql import Row, SparkSession
+import datetime
 from pyspark.sql.types import *
 
 import logging
@@ -16,7 +17,7 @@ def getSparkSessionInstance(sparkConf):
     if ('sparkSessionSingletonInstance' not in globals()):
         globals()['sparkSessionSingletonInstance'] = SparkSession.builder\
               .appName("SparkCassandraApp")\
-              .config("spark.cassandra.connection.host", "ec2-35-163-127-184.us-west-2.compute.amazonaws.com")\
+              .config("spark.cassandra.connection.host", "sb-k8s-ingress-1525602578.us-west-2.elb.amazonaws.com")\
               .config("spark.cassandra.connection.port", "9042")\
               .master("local[2]")\
               .getOrCreate();
@@ -45,27 +46,30 @@ if __name__ == "__main__":
     def getTweetDate(data):
         try:
             return str(datetime.strptime(data["created_at"], '%a %b %d %H:%M:%S %z %Y'))[:10]
-        except:
+        except Exception as e:
+            print(e)
             return
 
     def getCountryCode(data):
         try:
             return data['user']['derived']['locations'][0]['country_code']
-        except:
+        except Exception as e:
+            print(e)
             return
 
     def getGeoCoordinates(data):
         try:
             x,y =  data['user']['derived']['locations'][0]['geo']['coordinates']
             return " ".join([str(x), str(y)])
-        except:
+        except Exception as e:
             return " ".join(['0', '0'])
 
     def getHashTags(data):
-        try:
+        try:    
             return  ",".join([ii for ii in data['entities']['hashtags']])
             # return "a, b"
-        except:
+        except Exception as e:
+            print(e)
             return ""
 
     def getLocation(data):
@@ -77,31 +81,35 @@ if __name__ == "__main__":
         us_state_abbrev = { 'Alabama': 'AL', 'Alaska': 'AK', 'Arizona': 'AZ', 'Arkansas': 'AR', 'California': 'CA', 'Colorado': 'CO', 'Connecticut': 'CT', 'Delaware': 'DE', 'Florida': 'FL', 'Georgia': 'GA', 'Hawaii': 'HI', 'Idaho': 'ID', 'Illinois': 'IL', 'Indiana': 'IN', 'Iowa': 'IA', 'Kansas': 'KS', 'Kentucky': 'KY', 'Louisiana': 'LA', 'Maine': 'ME', 'Maryland': 'MD', 'Massachusetts': 'MA', 'Michigan': 'MI', 'Minnesota': 'MN', 'Mississippi': 'MS', 'Missouri': 'MO', 'Montana': 'MT', 'Nebraska': 'NE', 'Nevada': 'NV', 'New Hampshire': 'NH', 'New Jersey': 'NJ', 'New Mexico': 'NM', 'New York': 'NY', 'North Carolina': 'NC', 'North Dakota': 'ND', 'Ohio': 'OH', 'Oklahoma': 'OK', 'Oregon': 'OR', 'Pennsylvania': 'PA', 'Rhode Island': 'RI', 'South Carolina': 'SC', 'South Dakota': 'SD', 'Tennessee': 'TN', 'Texas': 'TX', 'Utah': 'UT', 'Vermont': 'VT', 'Virginia': 'VA', 'Washington': 'WA', 'West Virginia': 'WV', 'Wisconsin': 'WI', 'Wyoming': 'WY', }
         try:
             return us_state_abbrev[data['user']['derived']['locations'][0]['region']]
-        except:
+        except Exception as e:
+            print(e)
             return ""
 
     def getOriginalid(data):
         try:
             return data['retweeted_status']['id_str']
-        except:
+        except Exception as e:
+            print(e)
             return
 
     def getRetweetCount(data):
         try:
             return data['retweet_count']
-        except:
+        except Exception as e:
+            print(e)
             return
 
     #def getStatusURL(data):
     #    try:
     #        return data['object']['link']
-    #    except:
+    #    except Exception as e:
     #        return
 
     def getURLlist(data):
         try:
             return data['entities']['urls']
-        except:
+        except Exception as e:
+            print(e)
             return
     def getTweetType(data):
         if 'retweeted_status' in data.keys() and type(data["retweeted_status"]) == dict:
