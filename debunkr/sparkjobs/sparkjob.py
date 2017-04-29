@@ -2,11 +2,11 @@ from __future__ import print_function
 
 import sys,json
 from enum import Enum
+from datetime import datetime
 from pyspark import SparkContext
 from pyspark.streaming import StreamingContext
 from pyspark.streaming.kafka import KafkaUtils
 from pyspark.sql import Row, SparkSession
-import datetime
 from pyspark.sql.types import *
 
 import logging
