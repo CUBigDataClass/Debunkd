@@ -14,7 +14,7 @@ FactCheck.
 #### RoadMap
 - [x] Get Factchecking Links from Websites(Snopes for now)
 - [x] Get list of corresponding tweets from Twitter(Using GNIP).
-- [ ] Map visualization to show the distributions of the hoax
-- [ ] Map visualization to show timeline of the spread of the hoax
+- [x] Map visualization to show the distributions of the hoax
+- [x] Time series visualization to show timeline of the spread of the hoax
 - [ ] Graph visualization to show how Hoax spreads across news. 
 
