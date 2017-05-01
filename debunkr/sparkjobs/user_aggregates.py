@@ -1,10 +1,13 @@
-##gets the tweet id for the most retweeted tweets and populates data in cassandra table retweets_aggregates
+##the script generates user_aggregates for each topic
+##updates cassandra tables swashbucklers.user_aggregates
 
 from pyspark import SparkContext
+from pyspark.streaming import StreamingContext
 from pyspark.sql import Row, SparkSession
 from pyspark.sql.types import *
 from pyspark.sql.functions import count
 from pyspark.sql.functions import desc
+
 
 
 if __name__ == "__main__":
@@ -15,12 +18,14 @@ if __name__ == "__main__":
     df = spark.read.format("org.apache.spark.sql.cassandra").options(table="tweets_master", keyspace="swashbucklers").load();
     ##df.show()
 
+    ##aggregate over various states for a given topic
     df.cache()
     topic = df.select("topic").distinct()
     array = [i.topic for i in topic.collect()]
     for i in array:
-        q="retweets = df.select(\"topic\",\"retweet_count\",\"tweet_id\",\"posted_time\",\"body\").filter(\"topic =" +i +"\").filter(\"retweet_count > 10\").sort(desc(\"retweet_count\")).limit(100)"
+        q="user_aggregates = df.select(\"topic\",\"user_id\").filter(\"topic =" +i +"\").groupBy(\"topic\",\"user_id\").agg(count(\"user_id\").alias(\"count\")).na.drop().sort(desc(\"count\")).limit(10)"
         exec(q)
-        retweets.write.format("org.apache.spark.sql.cassandra").options(table="top_retweets", keyspace="swashbucklers").save(mode="append")
+        user_aggregates.write.format("org.apache.spark.sql.cassandra").options(table="user_aggregates", keyspace="swashbucklers").save(mode="append")
 
     df.unpersist()
+    ##topics_count.show()

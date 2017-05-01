@@ -19,7 +19,7 @@ if __name__ == "__main__":
     ##df.show()
 
     ##aggregate over various states for a given topic
-    topics_state_count = df.select("topic","location").groupBy("topic", "location").agg(count("location").alias("count")).filter("location is not null" or "location" != '')
+    topics_state_count = df.select("topic","location").groupBy("topic", "location").agg(count("location").alias("count")).na.drop()
     topics_state_count.write.format("org.apache.spark.sql.cassandra").options(table="state_aggregates", keyspace="swashbucklers").save(mode="overwrite")
     topics_state_count.unpersist()
     ##topics_count.show()
